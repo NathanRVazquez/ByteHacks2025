@@ -52,26 +52,6 @@
             </div>
           </v-card-text>
         </v-window-item>
-        <v-window-item :value="2">
-          <v-card-text>
-            <div v-if="selected.includes(Category.ComedyAndPerformance)">
-              <h2 class="text-2xl font-bold mb-4">Comedy & Performance Preferences</h2>
-              <v-checkbox
-                v-model="selected"
-                label="Stand-up Comedy"
-              ></v-checkbox>
-              <v-checkbox
-                v-model="selected"
-                label="Improv Shows"
-              ></v-checkbox>
-              <v-checkbox
-                v-model="selected"
-                label="Theater Performances"
-              ></v-checkbox>
-
-            </div>
-          </v-card-text>
-        </v-window-item>
         </v-item-group>
       </v-window>
       <v-card-actions>
@@ -86,7 +66,7 @@
           :disabled="step === 1 && selected.length === 0"
           @click="nextStep"
         >
-          {{ step === 2 ? 'Submit' : 'Next' }}
+          {{ step === 1 ? 'Submit' : 'Next' }}
         </v-btn>
       </v-card-actions>
     </v-card>
@@ -107,10 +87,6 @@ import CharityAndSocialCauses from "@/assets/images/charity_and_social_causes.jp
 import Music from "@/assets/images/music.jpg";
 import Education from "@/assets/images/education.jpg";
 import Dating from "@/assets/images/dating.jpg";
-
-// Page for user profile
-// Page for recommendations (events)
-// User connects account with google calendars
 
 enum Category {
   ComedyAndPerformance = 0,
