@@ -37,6 +37,8 @@
 <script setup lang="ts">
 const leftPages = [
   { title: "Home", path: "/", icon: "fa-house" },
+  { title: "Form", path: "/form", icon: "fa-file" },
+  { title: "Recommendations", path: "/recommendations", icon: "fa-thumbs-up" },
   { title: "My Schedule", path: "/schedule", icon: "fa-calendar-days" },
   { title: "Profile", path: "/profile", icon: "fa-user" },
 ]
