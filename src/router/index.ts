@@ -22,6 +22,11 @@ const router = createRouter({
 			component: SignIn,
 		},
     {
+      path: "/recommendations",
+      name: "Recommendations",
+      component: () => import("@/views/recommendations.vue"),
+    },
+    {
       path: "/form",
       name: "Form",
       component: () => import("@/views/form.vue"),

@@ -38,6 +38,7 @@
 const leftPages = [
   { title: "Home", path: "/", icon: "fa-house" },
   { title: "Form", path: "/form", icon: "fa-file" },
+  { title: "Recommendations", path: "/recommendations", icon: "fa-thumbs-up" },
 ]
 const rightPages = [
   { title: "SignUp", path: "/signup", icon: "fa-house" },
