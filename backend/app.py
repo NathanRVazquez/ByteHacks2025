@@ -2,6 +2,7 @@ import os
 import datetime
 from fastapi import FastAPI, Request, HTTPException, Query, Depends
 from fastapi.responses import RedirectResponse, HTMLResponse, JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
@@ -24,7 +25,13 @@ from supabase import create_client, Client
 load_dotenv()  # Load .env at the top
 
 app = FastAPI()
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Or your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 # setup db engine
 # models.Base.metadata.create_all(bind=engine)
 
@@ -113,7 +120,8 @@ async def register_user(user: UserBase, db: db_dependency):
         "password": user.password,
         "created_at":user.created_at
         })
-    return response.aud
+    # return response.aud
+    return response.user.aud
 
 
 # --- Step 1: Login ---
@@ -181,20 +189,20 @@ def auth_callback(request: Request):
 
 
 # --- Step 3: List events ---
-@app.get("/events")
-def list_events():
-    service = get_calendar_service()
-    if not service:
-        raise HTTPException(status_code=401, detail="❌ Not authenticated. Go to /login first.")
-    now = datetime.datetime.utcnow().isoformat() + "Z"
-    events_result = service.events().list(
-        calendarId="primary",
-        timeMin=now,
-        maxResults=10,
-        singleEvents=True,
-        orderBy="startTime",
-    ).execute()
-    return JSONResponse(events_result.get("items", []))
+# @app.get("/events")
+# def list_events():
+#     service = get_calendar_service()
+#     if not service:
+#         raise HTTPException(status_code=401, detail="❌ Not authenticated. Go to /login first.")
+#     now = datetime.datetime.utcnow().isoformat() + "Z"
+#     events_result = service.events().list(
+#         calendarId="primary",
+#         timeMin=now,
+#         maxResults=10,
+#         singleEvents=True,
+#         orderBy="startTime",
+#     ).execute()
+#     return JSONResponse(events_result.get("items", []))
 
 # --- Step 4: Add event (POST) ---
 @app.post("/add-event")
@@ -258,6 +266,20 @@ def add_event_get(
     created = service.events().insert(calendarId="primary", body=new_event).execute()
     return HTMLResponse(f'✅ Event created: <a href="{created.get("htmlLink")}" target="_blank">View in Calendar</a>')
 
+@app.get("/event")
+def get_event(eventId: str = Query(None, description="Event ID to fetch")):
+    print(eventId)
+    if eventId is not None:
+        try:
+            event_id_int = int(eventId)
+        except (ValueError, TypeError):
+            raise HTTPException(status_code=400, detail="event_id must be an integer")
+        result = supabase.table("events").select("*").eq("event_id", event_id_int).single().execute()
+        return result.data
+    else:
+        events = supabase.table("events").select("*").execute()
+        return events.data
+
 @app.get("/recommendations/tags")
 def get_recommendations_by_tags(
     tags: List[str] = Query(..., description="List of user tags"),
@@ -273,6 +295,8 @@ def get_recommendations_by_description(
 ):
     results = recommender.recommend_description(query)
     return results[:top_k]
+
+
 
 # @app.post("/survey")
 # def post_survey(user_survey: SurveyQuestionaireBase):

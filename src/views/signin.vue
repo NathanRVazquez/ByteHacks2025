@@ -19,6 +19,7 @@
 						variant="outlined"
 						color="grey-darken"
 						class="mb-4 text-none"
+            @click="userStore.googleSignIn"
 					>
 						<template v-slot:prepend>
 							<svg
@@ -83,16 +84,35 @@
 
 <script setup lang="ts">
 import { reactive } from "vue";
+import { useUserStore } from "@/stores/user";
+import { useRouter } from "vue-router";
+
+const userStore = useUserStore();
+const router = useRouter();
+const { login, setUser } = userStore;
 
 const form = reactive({
 	email: "",
 	password: "",
 });
 
-const onSubmit = () => {
+const onSubmit = async () => {
 	if (!form.email || !form.password) {
 		alert("Please fill all fields");
 		return;
 	}
+  try {
+    const status = await login(form.email, form.password);
+    if (status.detail === "Invalid credentials") {
+      alert("Invalid credentials");
+      return;
+    }
+    setUser(status.user);
+    router.push("/form");
+    // Redirect or perform other actions after successful login
+  } catch (error) {
+    alert(error);
+    console.error(error);
+  }
 };
 </script>

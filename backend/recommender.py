@@ -9,7 +9,7 @@ df = df.fillna("")
 
 model = SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
 
-tag_index = faiss.read_index("faiss_t.index")
+tag_index = faiss.read_index("faiss-t.index")
 with open("faiss-t.pkl", "rb") as f:
     tag_events = pickle.load(f)
 
@@ -23,8 +23,8 @@ def recommend_tags(user_tags):
     results = []
     for dist, idx in zip(distances[0], indices[0]):
         results.append({
-            "event_id": df.iloc[idx]["event_id"],
-            "similarity_score": float(dist)  
+            "event_id": int(df.iloc[int(idx)]["event_id"]),  # ensure int
+            "similarity_score": float(dist)  # ensure float
         })
     return results
 
@@ -38,7 +38,7 @@ def recommend_description(event_description):
     results = []
     for dist, idx in zip(distances[0], indices[0]):
         results.append({
-            "event_id": df.iloc[idx]["event_id"],
+            "event_id": int(df.iloc[idx]["event_id"]),
             "similarity_score": float(dist)  # higher = more similar
         })
     

@@ -14,6 +14,7 @@
 						variant="outlined"
 						color="grey-darken"
 						class="mb-4 text-none"
+            @click="userStore.googleSignIn"
 					>
 						<template v-slot:prepend>
 							<svg
@@ -92,21 +93,51 @@
 
 <script setup lang="ts">
 import { reactive } from "vue";
+import { useUserStore } from "@/stores/user";
+
+const userStore = useUserStore();
+
 
 const form = reactive({
 	email: "",
 	password: "",
 	confirmPassword: "",
 });
+const validateEmail = (email: string) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
 
-const onSubmit = () => {
+const onSubmit = async () => {
 	if (!form.email || !form.password || !form.confirmPassword) {
 		alert("Please fill all fields");
 		return;
-	}
+	} 
+  if (!validateEmail(form.email)) {
+    alert("Please enter a valid email");
+    return;
+  }
+  if (form.password.length < 6) {
+    alert("Password must be at least 6 characters long");
+    return;
+  }
+
 	if (form.password !== form.confirmPassword) {
 		alert("Passwords do not match");
 		return;
 	}
+
+  const status = await userStore.signup(form.email, form.password).catch(err => {
+    alert(err);
+    return null;
+  });
+  if (status === "authenticated")
+    alert("Successfully signed up! Please sign in.");
+  else
+    alert("Failed to sign up. Please try again.");
+
 };
 </script>

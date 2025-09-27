@@ -87,6 +87,7 @@ import CharityAndSocialCauses from "@/assets/images/charity_and_social_causes.jp
 import Music from "@/assets/images/music.jpg";
 import Education from "@/assets/images/education.jpg";
 import Dating from "@/assets/images/dating.jpg";
+import router from '@/router';
 
 enum Category {
   ComedyAndPerformance = 0,
@@ -160,10 +161,11 @@ const items2 = [
 const selected = ref<number[]>([]);
 
 function nextStep() {
-  if (step.value < 2) {
+  if (step.value < 1) {
     step.value++;
+    return;
   }
-  // Something to handle form submission when on last step
+  router.push({ name: 'Recommendations', query: { tags: selected.value.map(i => Category[i]) } });
 }
 
 </script>
