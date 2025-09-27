@@ -23,7 +23,7 @@ load_dotenv()  # Load .env at the top
 app = FastAPI()
 
 # setup db engine
-models.Base.metadata.create_all(bind=engine)
+# models.Base.metadata.create_all(bind=engine)
 
 url: str = os.environ.get("SUPABASE_URL")
 key: str = os.environ.get("SUPABASE_KEY")
