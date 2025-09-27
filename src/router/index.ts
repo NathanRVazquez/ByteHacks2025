@@ -11,18 +11,21 @@ const router = createRouter({
       name: "Home",
       component: HomeView,
     },
-
 		{
 			path: "/signup",
 			name: "SignUp",
 			component: SignUp,
 		},
-
 		{
 			path: "/signin",
 			name: "SignIn",
 			component: SignIn,
-		}
+		},
+    {
+      path: "/form",
+      name: "Form",
+      component: () => import("@/views/form.vue"),
+    }
   ],
 })
 

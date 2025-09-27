@@ -10,8 +10,8 @@ import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import { fas } from '@fortawesome/free-solid-svg-icons'
 import { far } from '@fortawesome/free-regular-svg-icons'
-import "@fortawesome/fontawesome-free/css/all.css";
 import 'vuetify/styles'
+import '@fortawesome/fontawesome-free/css/all.css' // Ensure your project is capable of handling css files
 import '@fontsource/roboto/100.css'
 import '@fontsource/roboto/300.css'
 import '@fontsource/roboto/400.css'
@@ -19,11 +19,18 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import '@fontsource/roboto/900.css'
 import "@/assets/main.css"
+import { VCalendar } from "vuetify/labs/components";
 
+library.add(fas) // Include needed solid icons
+library.add(far) // Include needed regular icons
 
 const app = createApp(App)
+app.component('font-awesome-icon', FontAwesomeIcon) // Register component globally
 const vuetify = createVuetify({
-  components,
+  components: {
+    ...components,
+    VCalendar
+  },
   directives,
   icons: {
     defaultSet: 'fa',
@@ -37,9 +44,6 @@ const vuetify = createVuetify({
   }
 })
 
-app.component('font-awesome-icon', FontAwesomeIcon) // Register component globally
-library.add(fas) // Include needed solid icons
-library.add(far) // Include needed regular icons
 
 app.use(createPinia())
 app.use(router)
