@@ -6,6 +6,9 @@ from pydantic import BaseModel
 from google_auth_oauthlib.flow import Flow
 from googleapiclient.discovery import build
 from dotenv import load_dotenv
+from typing import List
+import recommender   # 👈 import your recommender.py module
+
 
 from pydantic_extra_types.pendulum_dt import DateTime
 
@@ -255,9 +258,21 @@ def add_event_get(
     created = service.events().insert(calendarId="primary", body=new_event).execute()
     return HTMLResponse(f'✅ Event created: <a href="{created.get("htmlLink")}" target="_blank">View in Calendar</a>')
 
-# @app.get("/recomendations")
-# def get_recs():
-#     return 
+@app.get("/recommendations/tags")
+def get_recommendations_by_tags(
+    tags: List[str] = Query(..., description="List of user tags"),
+    top_k: int = Query(10, description="Number of recommendations")
+):
+    results = recommender.recommend_tags(tags)
+    return results[:top_k]
+
+@app.get("/recommendations/description")
+def get_recommendations_by_description(
+    query: str = Query(..., description="Event description to search"),
+    top_k: int = Query(3, description="Number of recommendations")
+):
+    results = recommender.recommend_description(query)
+    return results[:top_k]
 
 # @app.post("/survey")
 # def post_survey(user_survey: SurveyQuestionaireBase):
