@@ -37,6 +37,8 @@
 <script setup lang="ts">
 const leftPages = [
   { title: "Home", path: "/", icon: "fa-house" },
+  { title: "My Schedule", path: "/schedule", icon: "fa-calendar-days" },
+  { title: "Profile", path: "/profile", icon: "fa-user" },
 ]
 const rightPages = [
   { title: "SignUp", path: "/signup", icon: "fa-house" },

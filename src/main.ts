@@ -19,23 +19,26 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import '@fontsource/roboto/900.css'
 import "@/assets/main.css"
-
+import { VCalendar } from 'vuetify/labs/VCalendar'
 
 const app = createApp(App)
 const vuetify = createVuetify({
-  components,
-  directives,
-  icons: {
-    defaultSet: 'fa',
-    aliases,
-    sets: {
-      fa,
-    },
-  },
-  theme: {
-    defaultTheme: "dark"
-  }
-})
+	components: {
+		...components,
+		VCalendar, 
+	},
+	directives,
+	icons: {
+		defaultSet: "fa",
+		aliases,
+		sets: {
+			fa,
+		},
+	},
+	theme: {
+		defaultTheme: "dark",
+	},
+});
 
 app.component('font-awesome-icon', FontAwesomeIcon) // Register component globally
 library.add(fas) // Include needed solid icons
