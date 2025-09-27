@@ -39,7 +39,7 @@ const leftPages = [
   { title: "Home", path: "/", icon: "fa-house" },
 ]
 const rightPages = [
-  { title: "Home", path: "/", icon: "fa-house" },
+  { title: "SignUp", path: "/signup", icon: "fa-house" },
 ] 
 </script>
 
